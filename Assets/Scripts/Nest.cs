@@ -14,7 +14,7 @@ public class Nest : MonoBehaviour
         {
             var a = Instantiate(ant, transform.position, transform.rotation);
             a.transform.Rotate(new Vector3(0, Random.Range(0, 360), 0));
-            a.transform.Translate(a.transform.forward * 0.25f);
+            a.transform.Translate(a.transform.forward * 0.1f);
             a.GetComponent<ant>().nest = transform;
         }
     }
