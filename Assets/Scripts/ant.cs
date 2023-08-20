@@ -10,7 +10,10 @@ public class ant : MonoBehaviour
     [HideInInspector]public Transform nest;
     public GameObject trailMaster;
     public GameObject trailComponent;
+    public GameObject baseTrailMaster;
+    public GameObject baseTrailComponent;
     private GameObject currentlyDeployingTrail;
+    private GameObject currentlyDeployingBaseTrail;
     private PheromoneTrailMaster currentlyAcquiredTrail;
     private GameObject nextTrailPoint;
     private Rigidbody rb;
@@ -78,6 +81,7 @@ public class ant : MonoBehaviour
         {
             if (hasFood)
             {
+                currentlyDeployingBaseTrail = null;
                 var t = Instantiate(trailComponent, transform.position, transform.rotation, currentlyDeployingTrail.transform);
                 t.GetComponent<TrailComponent>().master = currentlyDeployingTrail.GetComponent<PheromoneTrailMaster>();
                 t.GetComponent<TrailComponent>().index = currentlyDeployingTrail.GetComponent<PheromoneTrailMaster>().trailComponents.Count;
@@ -86,7 +90,15 @@ public class ant : MonoBehaviour
             }
             else
             {
-                yield return null;
+                if (currentlyDeployingBaseTrail == null)
+                {
+                    currentlyDeployingBaseTrail = Instantiate(baseTrailMaster, transform.position, transform.rotation);
+                }
+                var t = Instantiate(baseTrailComponent, transform.position, transform.rotation, currentlyDeployingBaseTrail.transform);
+                t.GetComponent<TrailComponent>().master = currentlyDeployingBaseTrail.GetComponent<PheromoneTrailMaster>();
+                t.GetComponent<TrailComponent>().index = currentlyDeployingBaseTrail.GetComponent<PheromoneTrailMaster>().trailComponents.Count;
+                currentlyDeployingBaseTrail.GetComponent<PheromoneTrailMaster>().trailComponents.Add(t.GetComponent<TrailComponent>());
+                yield return new WaitForSeconds(0.2f);
             }
         }
     }
